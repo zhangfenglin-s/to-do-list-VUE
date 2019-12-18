@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .linethrough{
+            text-decoration: line-through;
+            opacity:.3;
+        }
+        #demodiv{
+            width:700px;
+            margin:0 auto;
+            background:grey;
+            padding:40px;
+        }
+    </style>
+    <script src="node_modules/vue/dist/vue.min.js"></script>
+</head>
+<body>
+    <div id="demodiv">
+        <h1>任务列表</h1>
+        <p>数量{{obj.length}}-----------剩余{{remain()}}----------- <button @click="sDel()">删除</button></p>
+        <ul>
+            <li v-for="(v,i) in obj">
+                <input type="checkbox" v-model=v.style @click="fun(v,i)"/>
+                <span :class="v.style?'linethrough':''" @click="up(i)" v-if="v.edit==false">{{v.title}}</span>  <!--{{v.style}} -->
+                <input type="text" v-model="v.title" v-else @blur="up(i)">
+            </li>
+        </ul>
+        <input type="text" v-model="inputText"/> <button @click="add()">添加</button>
+    </div>
+    <script>
+        new Vue({
+            el:"#demodiv",
+            data:{
+                obj:[
+                    {title:"111111111",style:false,edit:false,choice:false},
+                    {title:"111111112",style:false,edit:false,choice:false},
+                    {title:"111111113",style:false,edit:false,choice:false},
+                    {title:"111111114",style:false,edit:false,choice:false},
+                    {title:"111111115",style:false,edit:false,choice:false},
+                    {title:"111111116",style:false,edit:false,choice:false},
+                ],
+               
+                inputText:"",
+            },
+            methods:{
+                add(){
+                    if(this.inputText==""){
+                        preventDefault();
+                    }else{
+                        this.obj.push({title:this.inputText,style:false,edit:false});
+                        this.inputText="";
+                    }
+                },
+                remain(){
+                    var remain=0;
+                    this.obj.forEach(element => {
+                        if(element.style==false){
+                            remain++;
+                        }
+                    })
+                    return remain;
+                },
+                sDel(){
+                    var sheng = this.obj;
+                    this.obj = [];
+                    sheng.forEach((v,i)=>{
+                        if(v.style==false){
+                            this.obj.push(v);
+                        }
+                    })
+                },
+                // 编辑框出现时，点击checkbox，取消编辑框
+                fun(v,i){
+                    if(v.edit&&v.style==false){
+                        v.edit=false;
+                    }
+                },
+                up(i){
+                    if(this.obj[i].style){
+                        return;
+                    }
+                    this.obj[i].edit = !this.obj[i].edit;
+                },
+            },
+            computed:{
+
+            }
+        })
+    </script>
+</body>
+</html>
